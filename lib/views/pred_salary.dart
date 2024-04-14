@@ -79,6 +79,7 @@ class _SalaryPredState extends State<SalaryPred> {
     );
   }
 
+  final client = http.Client();
   //Send Data using Form Request
   Future<void> submitData() async {
     final salaryStr = salaryCont.text;
@@ -88,25 +89,35 @@ class _SalaryPredState extends State<SalaryPred> {
 
     final uri = Uri.parse(url);
     //this is form instead of json
-    final response = await http.post(uri,
-        body: body,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'});
+    try {
+      final response = await client.post(uri,
+          body: body,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'});
 
-    if (response.statusCode == 200) {
-      var json = response.body;
-      final salaryjson = salaryFromJson(json);
-      setState(() {
-        salary = salaryjson;
-        isLoaded = true;
-      });
-      showSnackbarMessage('Success ${response.statusCode}');
-    } else {
-      showSnackbarMessage('Failed Connection ${response.statusCode}');
+      if (response.statusCode == 200) {
+        var json = response.body;
+        final salaryjson = salaryFromJson(json);
+        setState(() {
+          salary = salaryjson;
+          isLoaded = true;
+        });
+        showSnackbarMessage('Success ${response.statusCode}');
+      } else {
+        showSnackbarMessage('Failed Connection ${response.statusCode}');
+      }
+    } catch (e) {
+      showSnackbarMessage('Error: $e');
     }
   }
 
   void showSnackbarMessage(String message) {
     final snc = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snc);
+  }
+
+  @override
+  void dispose() {
+    client.close();
+    super.dispose();
   }
 }
