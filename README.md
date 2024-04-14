@@ -1,5 +1,6 @@
-# Simple Salary Prediction App
+# Simple Salary Prediction App made by Flutter
 
-- Use Pythonanywhere as api
+- Use Pythonanywhere as api to run
 - Use python flask , scikitlearn==1.2.2 , numpy and joblib
-- from task 4 data mining
+- From task 4 data mining
+- it has simple machine learning 
